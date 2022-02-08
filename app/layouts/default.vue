@@ -9,7 +9,7 @@
     >
       <v-list>
         <v-list-item
-          v-for="(item, i) in items"
+          v-for="(item, i) in navItems"
           :key="i"
           :to="item.to"
           router
@@ -65,12 +65,13 @@
 <script>
 import { crafterConf } from '@craftercms/classes';
 import AppFooter from '../components/AppFooter';
+import { getNav } from '../lib/api';
 
 const siteName = process.env.NUXT_ENV_CRAFTERCMS_SITE_NAME;
 if (typeof siteName === 'undefined') {
-  throw new Error('The value of `NUXT_ENV_CRAFTERCMS_SITE_NAME` is not defined. Did you create a `.env` file and declare the `NUXT_ENV_CRAFTERCMS_SITE_NAME` variable?');
+  throw new TypeError('The value of `NUXT_ENV_CRAFTERCMS_SITE_NAME` is not defined. Did you create a `.env` file and declare the `NUXT_ENV_CRAFTERCMS_SITE_NAME` variable?');
 } else if (siteName === '') {
-  throw new Error('The site name value of is blank. Set `NUXT_ENV_CRAFTERCMS_SITE_NAME=YOUR_SITE_NAME` in your .env file.');
+  throw new TypeError('The site name value of is blank. Set `NUXT_ENV_CRAFTERCMS_SITE_NAME=YOUR_SITE_NAME` in your .env file.');
 }
 
 crafterConf.configure({
@@ -78,6 +79,15 @@ crafterConf.configure({
   site: siteName,
   cors: true,
 });
+
+const ICON_MAP = {
+  'about': 'mdi-information-outline',
+  'blog': 'mdi-blogger',
+  'contact': 'mdi-email-outline',
+  'home': 'mdi-home-outline',
+  'products': 'mdi-cube-outline',
+  'services': 'mdi-wrench-outline',
+};
 
 export default {
   name: 'DefaultLayout',
@@ -89,22 +99,21 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/',
-        },
-        {
-          icon: 'mdi-information-outline',
-          title: 'About',
-          to: '/about',
-        },
-      ],
+      navItems: [],
       miniVariant: false,
       right: true,
       rightDrawer: false,
       title: 'CrafterCMS + NuxtJS',
+    }
+  },
+  async fetch() {
+    const nav = await getNav();
+    if (nav) {
+      this.navItems = nav.map(item => ({
+        icon: ICON_MAP[item.url.replace('/', '')] ?? ICON_MAP.home,
+        title: item.label,
+        to: item.url,
+      }));
     }
   },
 }
