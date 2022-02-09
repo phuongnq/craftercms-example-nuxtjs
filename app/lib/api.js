@@ -8,7 +8,7 @@ import 'isomorphic-unfetch';
 
 export async function getModel(path = '/site/website/index.xml') {
   return await firstValueFrom(
-    getDescriptor(path, { flatten: true }, fetch).pipe(
+    getDescriptor(path, { flatten: true }).pipe(
       map(parseDescriptor)
       // Can use this for debugging purposes.
       // tap(console.log)
