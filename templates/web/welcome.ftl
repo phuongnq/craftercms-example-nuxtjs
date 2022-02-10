@@ -32,10 +32,10 @@
   <ol>
     <li>
       In the CrafterCMS site sandbox directory, you'll find a directory called
-      app, which is the Next.JS app. Visit that directory on your terminal and run `yarn`
+      app, which is the Nuxt.JS app. Visit that directory on your terminal and run `yarn`
     </li>
     <li>
-      Create a copy of <em>app/.env.local.example</em> to produce <em>app/.env.local</em>.
+      Create a copy of <em>app/.env.example</em> to produce <em>app/.env</em>.
       If you named your site <strong>next-js</strong> and CrafterCMS is running on <strong>localhost:8080</strong>,
       no further edits are necessary; otherwise, change the file accordingly.
     </li>
