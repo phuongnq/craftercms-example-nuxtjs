@@ -9,14 +9,14 @@
           <div
             v-bind="getIce({ model, fieldId: 'content_o' })"
           >
-             <div v-for="(component, index) in model.content_o" v-bind:key="index" v-bind="getIce({ model, fieldId: 'content_o', index })">
+             <div v-for="(component, index) in model.content_o" :key="index" v-bind="getIce({ model, fieldId: 'content_o', index })">
               <div
                 v-bind="getIce({ model: component })"
               >
                 <div
                   class="backgroud"
                   v-bind="getIce({ model: component, fieldId: 'background_s' })"
-                   v-bind:style="{ 'background-image': 'url(' + $config.baseURL + component.background_s + ')' }"
+                  :style="{ 'background-image': 'url(' + $config.baseURL + component.background_s + ')' }"
                 >
                   <h2
                     v-bind="getIce({ model: component, fieldId: 'title_s' })"
@@ -34,8 +34,7 @@
 </template>
 
 <script>
-import { from } from 'rxjs';
-import { fetchIsAuthoring, getICEAttributes, initInContextEditing }  from '@craftercms/experience-builder';
+import { fetchIsAuthoring, initInContextEditing }  from '@craftercms/experience-builder';
 import { getModel } from '../lib/api';
 
 export default {
@@ -44,15 +43,12 @@ export default {
     const model = await getModel();
     return { model };
   },
-  mounted() {
-    initInContextEditing({
-      path: this.model.craftercms.path
-    })
-  },
-  methods: {
-    getIce({ model, fieldId, index }) {
-      const isAuthoring = from(fetchIsAuthoring());
-      return getICEAttributes({ model, fieldId, index, isAuthoring });
+  async mounted() {
+    const isAuthoring = await fetchIsAuthoring();
+    if (isAuthoring) {
+      initInContextEditing({
+        path: this.model.craftercms.path
+      });
     }
   },
 }

@@ -12,8 +12,7 @@
 </template>
 
 <script>
-import { from } from 'rxjs';
-import { fetchIsAuthoring, getICEAttributes, initInContextEditing }  from '@craftercms/experience-builder';
+import { fetchIsAuthoring, initInContextEditing }  from '@craftercms/experience-builder';
 import { getModel } from '../lib/api';
 
 export default {
@@ -22,16 +21,13 @@ export default {
     const model = await getModel('/site/website/about/index.xml');
     return { model };
   },
-  mounted() {
-    initInContextEditing({
-      path: this.model.craftercms.path
-    });
-  },
-  methods: {
-    getIce({ model, fieldId, index }) {
-      const isAuthoring = from(fetchIsAuthoring());
-      return getICEAttributes({ model, fieldId, index, isAuthoring });
+  async mounted() {
+    const isAuthoring = await fetchIsAuthoring();
+    if (isAuthoring) {
+      initInContextEditing({
+        path: this.model.craftercms.path
+      });
     }
-  },
+  }
 }
 </script>
